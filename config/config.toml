@@ -1,0 +1,31 @@
+#privileged = true
+#volumes = ["/certs/client", "/cache"]
+[[runners]]
+    name = "DockerRunner"
+    url = "https://gitlab.com/"
+    token = "TOKEN"
+    executor = "docker"
+    [runners.custom_build_dir]
+    [runners.docker]
+        tls_verify = false
+        image = "docker:latest"
+        privileged = true
+        disable_entrypoint_overwrite = false
+        oom_kill_disable = false
+        disable_cache = false
+        volumes = ["/certs/client", "/cache"]
+        shm_size = 0
+    [runners.cache]
+        [runners.cache.s3]
+        [runners.cache.gcs]
+
+[[runners]]
+    name = "ShellRunner"
+    url = "https://gitlab.com/"
+    token = "TOKEN"
+    executor = "shell"
+[runners.custom_build_dir]
+[runners.cache]
+    [runners.cache.s3]
+    [runners.cache.gcs]
+

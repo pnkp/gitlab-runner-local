@@ -1,0 +1,42 @@
+#example CI file
+stages:
+  - lint
+  - test
+  - build
+
+default:
+  image: docker:latest
+  services:
+    - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+  APP_IMAGE_TAG: nestjs-example
+
+before_script:
+  - export PATH=$PATH:/usr/bin:/etc/docker
+  - apk add --update make
+
+lint:
+  stage: lint
+  only:
+    - merge_requests
+  script:
+    - make install-dependency
+    - docker compose run --rm api npm run lint
+    - docker compose run --rm api npx tsc --noEmit
+
+test-integration:
+  stage: test
+  only:
+    - merge_requests
+  script:
+    - make ci-test-integration
+
+test-unit:
+  stage: test
+  only:
+    - merge_requests
+  script:
+    - make ci-test-unit
